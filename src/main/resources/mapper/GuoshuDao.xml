@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.GuoshuDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.guoshu_name as guoshuName
+        ,a.guoshu_uuid_number as guoshuUuidNumber
+        ,a.guoshu_photo as guoshuPhoto
+        ,a.guoshu_types as guoshuTypes
+        ,a.guoshu_erji_types as guoshuErjiTypes
+        ,a.guoshu_chandi as guoshuChandi
+        ,a.guoshu_qihou as guoshuQihou
+        ,a.guoshu_jijie as guoshuJijie
+        ,a.guoshu_clicknum as guoshuClicknum
+        ,a.guoshu_content as guoshuContent
+        ,a.guoshu_bingchonghai_content as guoshuBingchonghaiContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.guoshu_delete as guoshuDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.GuoshuView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM guoshu  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.guoshuName != '' and params.guoshuName != null and params.guoshuName != 'null' ">
+                and a.guoshu_name like CONCAT('%',#{params.guoshuName},'%')
+            </if>
+            <if test=" params.guoshuUuidNumber != '' and params.guoshuUuidNumber != null and params.guoshuUuidNumber != 'null' ">
+                and a.guoshu_uuid_number like CONCAT('%',#{params.guoshuUuidNumber},'%')
+            </if>
+            <if test="params.guoshuTypes != null and params.guoshuTypes != ''">
+                and a.guoshu_types = #{params.guoshuTypes}
+            </if>
+            <if test="params.guoshuErjiTypes != null and params.guoshuErjiTypes != ''">
+                and a.guoshu_erji_types = #{params.guoshuErjiTypes}
+            </if>
+            <if test=" params.guoshuChandi != '' and params.guoshuChandi != null and params.guoshuChandi != 'null' ">
+                and a.guoshu_chandi like CONCAT('%',#{params.guoshuChandi},'%')
+            </if>
+            <if test=" params.guoshuQihou != '' and params.guoshuQihou != null and params.guoshuQihou != 'null' ">
+                and a.guoshu_qihou like CONCAT('%',#{params.guoshuQihou},'%')
+            </if>
+            <if test=" params.guoshuJijie != '' and params.guoshuJijie != null and params.guoshuJijie != 'null' ">
+                and a.guoshu_jijie like CONCAT('%',#{params.guoshuJijie},'%')
+            </if>
+            <if test="params.guoshuClicknumStart != null and params.guoshuClicknumStart != ''">
+                <![CDATA[  and a.guoshu_clicknum >= #{params.guoshuClicknumStart}   ]]>
+            </if>
+            <if test="params.guoshuClicknumEnd != null and params.guoshuClicknumEnd != ''">
+                <![CDATA[  and a.guoshu_clicknum <= #{params.guoshuClicknumEnd}   ]]>
+            </if>
+             <if test="params.guoshuClicknum != null and params.guoshuClicknum != ''">
+                and a.guoshu_clicknum = #{params.guoshuClicknum}
+             </if>
+            <if test=" params.guoshuContent != '' and params.guoshuContent != null and params.guoshuContent != 'null' ">
+                and a.guoshu_content like CONCAT('%',#{params.guoshuContent},'%')
+            </if>
+            <if test=" params.guoshuBingchonghaiContent != '' and params.guoshuBingchonghaiContent != null and params.guoshuBingchonghaiContent != 'null' ">
+                and a.guoshu_bingchonghai_content like CONCAT('%',#{params.guoshuBingchonghaiContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.guoshuDeleteStart != null and params.guoshuDeleteStart != ''">
+                <![CDATA[  and a.guoshu_delete >= #{params.guoshuDeleteStart}   ]]>
+            </if>
+            <if test="params.guoshuDeleteEnd != null and params.guoshuDeleteEnd != ''">
+                <![CDATA[  and a.guoshu_delete <= #{params.guoshuDeleteEnd}   ]]>
+            </if>
+             <if test="params.guoshuDelete != null and params.guoshuDelete != ''">
+                and a.guoshu_delete = #{params.guoshuDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
